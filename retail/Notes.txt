@@ -1,0 +1,43 @@
+what is data lakehouse?
+	Combines flexibility of data lakes
+	Adds data management of data warehouse
+	Supports diverse data types and workloads
+	Enables both SQL and ML workloads
+
+Three layer Architecture:
+	1.Bronze: raw data ingestion
+	2.Silver: cleaned and conformed data 
+	3.Gold: Business-level aggregates
+	
+✅ Highlights of the Process
+
+Step 1: Ingest to Bronze Layer
+
+Read files from /Volumes/main/default/raw/ (I have used volumes to upload data since we are using databricks free edition )
+Add ingestion_timestamp column
+Save as Delta tables in bronze_db
+Archive processed files once needed
+
+Step 2: Create Silver Layer
+
+Create silver_db and silver tables
+Filter incremental data using ingestion_timestamp > max(silver_table.ingestion_timestamp)
+Apply cleaning, validations, segmentation (e.g. high-value customers)
+Use MERGE to update SCD Type 2 records
+
+Step 3: Gold Layer Aggregations
+
+Create gold_db
+Generate reporting tables like:
+gold_category_sales: Total sales per product category
+gold_total_sales: Sum of all transactions
+Use GROUP BY, SUM, and JOIN queries from silver layer
+
+➍ Step 4: Power BI Integration
+
+Connect Power BI Desktop to Databricks via ODBC or connector
+Import tables from gold_db
+Create visuals like:
+Line/bar charts of sales by category
+Time series of daily/weekly revenue
+
